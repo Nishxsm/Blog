@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT);
 
-    // Check if the username already exists
+    //to check if the username already exists
     $checkSql = "SELECT id FROM users WHERE username = ?";
     $checkStmt = $conn->prepare($checkSql);
     $checkStmt->bind_param("s", $username);
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $checkStmt->close();
 
-    // Proceed with the registration
+   
     $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sss", $username, $email, $password);
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
 .notification {
     position: fixed;
-    bottom: 20px;             /* 20px margin from the bottom */
+    bottom: 20px;           
     left: 50%;
     transform: translateX(-50%);
     padding: 15px;
@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     color: white;
     font-weight: bold;
     z-index: 1000;
-    opacity: 0;               /* start hidden */
+    opacity: 0;               
 }
 
 /* Different background colors for each type */
@@ -89,9 +89,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-/* Apply the animation */
+
 .notification.show {
-    animation: fadeInOut 4s forwards; /* adjust duration as needed */
+    animation: fadeInOut 4s forwards; 
 }
 
 
