@@ -1,18 +1,19 @@
 <?php
-session_start(); // Start the session
+session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php"); // Redirect to login if not authenticated
+    header("Location: index.php");
     exit();
 }
 
-include 'config.php'; // Database connection
+include 'config.php';
 
-// Fetch user's posts
-$sql = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
-$stmt = $conn->prepare($sql);
+// Fetch only logged-in user's posts for the profile section
+$stmt = $conn->prepare("SELECT title, content FROM posts WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
-$result = $stmt->get_result();
+$posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,39 +25,49 @@ $result = $stmt->get_result();
 </head>
 <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2>Side Menu</h2>
+        <button class="burger-icon" id="burgerButton" aria-label="Toggle Menu">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+        
+        <nav class="side-menu" id="sideMenu">
             <ul>
-                <li><a href="#" onclick="showSection('home')">Home</a></li>
-                <li><a href="#" onclick="showSection('explore')">Explore</a></li>
-                <li><a href="#" onclick="showSection('profile')">Profile</a></li>
+            <li onclick="showSection('home')" data-section="home">Home</li>
+<li onclick="showSection('explore')" data-section="explore">Explore</li>
+<li onclick="showSection('profile')" data-section="profile">Profile</li>
+
+                <li class="menu-item logout"><a href="logout.php">Logout</a></li>
             </ul>
-            <a class="logout" href="logout.php">Logout</a>
-        </aside>
-        <main class="content">
+        </nav>
+
+        <main class="content" id="mainContent">
             <section id="home">
-                <h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+                <h2>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
+            </section>
+            <section id="explore" style="display:none;">
+                <h2>Explore Section</h2>
+                <div id="explore-posts">
+                    
+                </div>
+            </section>
+            <section id="profile" style="display:none;">
+                <h2>Profile Section</h2>
                 <h3>Your Posts:</h3>
                 <div id="posts-container">
-                    <?php while ($post = $result->fetch_assoc()): ?>
+                    <?php foreach ($posts as $post): ?>
                         <div class="post">
                             <h4><?php echo htmlspecialchars($post['title']); ?></h4>
                             <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
                         </div>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </div>
-            </section>
-            <section id="explore" style="display:none;">
-                <h2>Explore Section</h2>
-            </section>
-            <section id="profile" style="display:none;">
-                <h2>Profile Section</h2>
             </section>
         </main>
     </div>
-    
+
     <button class="create-post" onclick="openPostModal()">+</button>
-    
+
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closePostModal()">&times;</span>
@@ -67,55 +78,7 @@ $result = $stmt->get_result();
         </div>
     </div>
     
-    <script>
-        function showSection(section) {
-            document.querySelectorAll('main section').forEach(sec => sec.style.display = 'none');
-            document.getElementById(section).style.display = 'block';
-        }
+    <script src="../js_files/dashboard.js"></script>
 
-        function openPostModal() {
-            document.getElementById('post-modal').style.display = 'block';
-        }
-
-        function closePostModal() {
-            document.getElementById('post-modal').style.display = 'none';
-        }
-
-        function createPost() {
-    let title = document.getElementById('post-title').value.trim();
-    let content = document.getElementById('post-content').value.trim();
-
-    if (title && content) {
-        fetch('create_post.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log("Server response:", data); // Debugging
-            if (data.includes("Post created successfully")) { // Match response
-                let postContainer = document.getElementById('posts-container');
-                let newPost = document.createElement('div');
-                newPost.classList.add('post');
-                newPost.innerHTML = `<h4>${title}</h4><p>${content}</p>`;
-                postContainer.prepend(newPost);
-                closePostModal();
-            } else {
-                alert("Failed to create post: " + data);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    } else {
-        alert("Title and content cannot be empty!");
-    }
-}
-
-    </script>
 </body>
 </html>
-
-<?php
-$stmt->close();
-$conn->close();
-?>

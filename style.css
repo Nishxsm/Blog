@@ -657,61 +657,179 @@ input {
   text-decoration: underline;
 }
 
-
+/* Dashboard Layout */
 .dashboard-container {
   display: flex;
   width: 100%;
+  min-height: 100vh;
+  position: relative;
 }
-.sidebar {
+
+/* Burger Menu */
+.burger-icon {
+  font-size: 24px;
+  cursor: pointer;
+  position: fixed;
+  color: #333;
+  left: 20px;
+  top: 15px;
+  z-index: 1100;
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.burger-icon:hover {
+  background-color: #f0f0f0;
+}
+
+/* Sidebar Menu */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 250px;
-  background: #333;
+  height: 100%;
+  background-color: #333;
   color: white;
-  padding: 20px;
-  height: 100vh;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  padding-top: 60px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  z-index: 1099;
 }
-.sidebar ul {
-  list-style: none;
+
+.side-menu.active {
+  transform: translateX(0);
+}
+
+.side-menu ul {
+  list-style-type: none;
   padding: 0;
+  margin: 0;
 }
-.sidebar ul li {
-  padding: 10px 0;
-}
-.sidebar ul li a {
+
+.side-menu ul li {
+  font-family: Arial, sans-serif;
   color: white;
-  text-decoration: none;
+  padding: 15px 25px;
+  border-bottom: 1px solid #444;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: relative;
 }
-.logout {
-  display: block;
-  margin-top: 20px;
-  color: red;
-  text-decoration: none;
+
+.side-menu ul li:hover {
+  background-color: #444;
 }
+
+.side-menu ul li.active {
+  background-color: #4a4a4a;
+}
+
+.side-menu ul li.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: #007bff;
+}
+
+/* Main Content */
 .content {
-  flex-grow: 1;
+  flex: 1;
   padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+  margin-top: 40px;
 }
+
+.content.shift {
+  margin-left: 250px;
+}
+
+/* Logout */
+.logout {
+  border-top: 1px solid #444;
+  margin-top: 20px;
+}
+
+.logout a {
+  color: #ff4444;
+  text-decoration: none;
+  display: block;
+  transition: color 0.3s;
+}
+
+.logout a:hover {
+  color: #ff6666;
+}
+
+/* Sections */
+section {
+  display: none;
+  flex-direction: column;
+}
+
+section:first-child {
+  display: flex;
+}
+
+/* Posts */
 .post {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
 }
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Create Post Button */
 .create-post {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: blue;
+  background: #007bff;
   color: white;
   border: none;
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   font-size: 24px;
   cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.create-post:hover {
+  transform: scale(1.1);
+  background: #0056b3;
+}
+
+/* Modal */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1200;
   left: 0;
   top: 0;
   width: 100%;
@@ -720,14 +838,43 @@ input {
   justify-content: center;
   align-items: center;
 }
+
 .modal-content {
   background: white;
-  padding: 20px;
-  width: 300px;
-  border-radius: 5px;
+  padding: 25px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
+
 .close {
-  float: right;
+  position: absolute;
+  right: 15px;
+  top: 10px;
   font-size: 24px;
   cursor: pointer;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.close:hover {
+  color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .side-menu {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .content.shift {
+    margin-left: 0;
+  }
+
+  .post {
+    margin: 10px 0;
+  }
 }

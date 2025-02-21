@@ -114,16 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="notification <?php echo $_SESSION['msg_type']; ?>" id="notification">
             <?php echo $_SESSION['message']; ?>
         </div>
-        <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const notif = document.getElementById("notification");
-    notif.classList.add("show");
-
-    setTimeout(() => {
-        notif.style.display = "none";
-    }, 4000);
-});
-</script>
+        <script src="../js_files/register.js"> </script>
 
         <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
