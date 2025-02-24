@@ -7,22 +7,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT);
 
-    //to check if the username already exists
-    $checkSql = "SELECT id FROM users WHERE username = ?";
+    // Check if username or email already exists
+    $checkSql = "SELECT id FROM users WHERE username = ? OR email = ?";
     $checkStmt = $conn->prepare($checkSql);
-    $checkStmt->bind_param("s", $username);
+    $checkStmt->bind_param("ss", $username, $email);
     $checkStmt->execute();
     $result = $checkStmt->get_result();
 
-    if($result->num_rows > 0) {
-        $_SESSION['message'] = "Username already taken. Please choose another.";
+    if ($result->num_rows > 0) {
+        $_SESSION['message'] = "Username or email already taken. Please choose another.";
         $_SESSION['msg_type'] = "error";
         header("Location: register.php");
         exit();
     }
     $checkStmt->close();
 
-   
+    // Insert new user
     $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sss", $username, $email, $password);
@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $stmt->close();
 }
+
 ?>
 
 

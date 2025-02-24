@@ -25,43 +25,45 @@ document.addEventListener("DOMContentLoaded", function () {
         burger.classList.toggle("active");
     });
 
-    // 🟢 Open & Close Post Modal
-    function openPostModal() {
-        modal.style.display = "block";
+    // 🟢 Open Modal
+    window.openPostModal = function () {
+        modal.style.display = "flex"; // Make sure it uses flex to center it
         titleInput.focus();
-    }
+    };
 
-    function closePostModal() {
+    // 🟢 Close Modal
+    window.closePostModal = function () {
         modal.style.display = "none";
         titleInput.value = "";
         contentInput.value = "";
-    }
+    };
+    
 
-    // 🟢 Create a New Post
-    function createPost() {
-        const title = titleInput.value.trim();
-        const content = contentInput.value.trim();
-        if (!title || !content) return alert("Title and content cannot be empty!");
+   // 🟢 Create a New Post
+   window.createPost = function () {
+    const title = titleInput.value.trim();
+    const content = contentInput.value.trim();
+    if (!title || !content) return alert("Title and content cannot be empty!");
 
-        fetch("create_post.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
-        })
-        .then(response => response.text())
-        .then(data => {
-            if (data.includes("Post created successfully")) {
-                const newPost = document.createElement("div");
-                newPost.classList.add("post");
-                newPost.innerHTML = `<h4>${title}</h4><p>${content.replace(/\n/g, "<br>")}</p><small>Just now</small>`;
-                postContainer.prepend(newPost);
-                closePostModal();
-            } else {
-                alert("Failed to create post: " + data);
-            }
-        })
-        .catch(() => alert("Error creating post. Please try again."));
-    }
+    fetch("create_post.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data.includes("Post created successfully")) {
+            const newPost = document.createElement("div");
+            newPost.classList.add("post");
+            newPost.innerHTML = `<h4>${title}</h4><p>${content.replace(/\n/g, "<br>")}</p><small>Just now</small>`;
+            postContainer.prepend(newPost);
+            closePostModal();
+        } else {
+            alert("Failed to create post: " + data);
+        }
+    })
+    .catch(() => alert("Error creating post. Please try again."));
+};
 
     // 🟢 Load Posts for Explore Section
     function loadExplorePosts() {
@@ -118,4 +120,13 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("[data-section='explore']").addEventListener("click", function () {
         loadExplorePosts();
     });
+});
+
+
+//to remove active class from side menu if we click outside of it
+
+document.addEventListener('click', function(event) {
+    if (!sideMenu.contains(event.target) && !document.querySelector('.burger-icon').contains(event.target)) {
+        sideMenu.classList.remove('active');
+    }
 });

@@ -22,20 +22,23 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <div class="dashboard-container">
-        <button class="burger-icon" id="burgerButton" aria-label="Toggle Menu">
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-        </button>
+    <button class="burger-icon" id="burgerButton" aria-label="Toggle Menu">
+    <i class="fa-solid fa-bars"></i> <!-- Burger Icon -->
+</button>
+
+
         
         <nav class="side-menu" id="sideMenu">
             <ul>
             <li onclick="showSection('home')" data-section="home">Home</li>
-<li onclick="showSection('explore')" data-section="explore">Explore</li>
-<li onclick="showSection('profile')" data-section="profile">Profile</li>
+            <li onclick="showSection('explore')" data-section="explore">Explore</li>
+            <li onclick="showSection('profile')" data-section="profile">Profile</li>
 
                 <li class="menu-item logout"><a href="logout.php">Logout</a></li>
             </ul>
@@ -68,13 +71,14 @@ $conn->close();
 
     <button class="create-post" onclick="openPostModal()">+</button>
 
+
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closePostModal()">&times;</span>
-            <h2>Create Post</h2>
+            <h2>Whats on your mind today....</h2>
             <input type="text" id="post-title" placeholder="Title" required>
             <textarea id="post-content" placeholder="Write something..." required></textarea>
-            <button onclick="createPost()">Post</button>
+            <button class="post-btn" onclick="createPost()">Post</button>
         </div>
     </div>
     
