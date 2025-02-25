@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
     $user_id = $_SESSION['user_id'];
-    $created_at = date('Y-m-d H:i:s'); // Get current timestamp
+    $created_at = date('Y-m-d H:i:s');
 
     if (!empty($title) && !empty($content)) {
         $sql = "INSERT INTO posts (user_id, title, content, created_at) VALUES (?, ?, ?, ?)";
