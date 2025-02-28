@@ -5,6 +5,7 @@ html{
 body{
     margin:0;
     padding: 0;
+    font-family:'Montserrat', Helvetica, sans-serif 
 }
 
 .container {
@@ -232,9 +233,12 @@ input {
   }
   
 
-  .header-area h1,p,
-  .middle-outer-div h1,p,
-  .middle-outer-div2 h1,p
+  .header-area h1,
+  .middle-outer-div h1,
+  .middle-outer-div2 h1,
+  .header-area p,
+  .middle-outer-div p,
+  .middle-outer-div2 p
    {
     animation: slideUp 0.8s ease-out;
   }
@@ -345,12 +349,6 @@ input {
     transform:translateY(-3px);
 }
 
-.spacer {
-    height: 30px;
-    width: 100%;
-    background-color: whitesmoke;
-}
-
 .middle-outer-div {
   background-color:#24040B;
   padding: 40px 20px;
@@ -366,7 +364,11 @@ input {
   margin-bottom: 20px;
   font-family: 'Montserrat', Helvetica, sans-serif;
 }
-
+.space{
+  width: 100%;
+  height:30px;
+  color: whitesmoke;
+}
 .middle-outer-div p {
   font-size: 18px;
   color: #ffffff;
@@ -783,15 +785,40 @@ section:first-child {
 }
 
 
+/* Post Container */
 .post {
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  position: relative; /* Ensures absolute elements stay inside */
   padding: 15px;
-  margin-bottom: 15px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Delete Button */
+.delete-post {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color:black;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.delete-post:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
 
 .post:hover {
   transform: translateY(-2px);
@@ -896,7 +923,7 @@ section:first-child {
 }
 
 
-.modal-content input, textarea {
+.modal-content input,.modal-content textarea {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
@@ -948,7 +975,32 @@ section:first-child {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
+  position: relative; /* This ensures the button stays inside */
 }
+
+/* Edit Profile Button */
+.profile-header button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: black;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  transition: background 0.3s ease-in-out, transform 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.profile-header button:hover {
+  background-color: #333;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
 
 /* Profile Picture */
 .profile-pic {
@@ -987,12 +1039,14 @@ section:first-child {
 
 /* Posts Section */
 .posts-title {
-  margin-top: 20px;
+  padding: 1px;
   font-size: 20px;
   text-align: center;
 }
 
 #posts-container {
+  margin-top: 25px;
+  padding-top: 10px;
   border: 1px solid #ddd;
   padding: 15px;
   border-radius: 10px;
@@ -1005,6 +1059,238 @@ section:first-child {
   margin-bottom: 10px;
 }
 
-.post button{
-  
+.back-button-container {
+  font-size: 24px;
+  cursor: pointer;
+  position: fixed;
+  color: #333;
+  left: 20px;
+  top: 15px;
+  z-index: 1098;
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.back-button:hover {
+  color: #007bff;
+}
+
+/* Profile Container */
+.profile-container {
+  max-width: 90%;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin: 10px 0;
+}
+
+/* User Posts */
+.user-posts {
+  max-width: 90%;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-posts h3 {
+  text-align: center;
+}
+
+.post {
+  background: #f1f1f1;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.post h4 {
+  margin: 0;
+  font-size: 18px;
+  color: black;
+}
+
+.post p {
+  margin: 10px 0;
+}
+
+.post small {
+  display: block;
+  color: #666;
+}
+
+/* Explore Section */
+#explore {
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Search Bar */
+#searchUser {
+  width: 97%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Posts Container */
+#explore-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Individual Post */
+.post {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Post Header */
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.post-header a {
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.post-header:hover a {
+  text-decoration: underline;
+}
+
+/* Post Content */
+.post h4 {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.post p {
+  font-size: 14px;
+  color: #555;
+}
+
+.post small {
+  font-size: 12px;
+  color: #777;
+}
+
+#searchResults {
+  display: none; 
+  position: absolute;
+  background: white; 
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 600px; /* Adjust based on layout */
+  z-index: 10;
+}
+
+
+#searchResults {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#searchResults div {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+#searchResults div:last-child {
+  border-bottom: none;
+}
+
+#searchResults div:hover {
+  background: #f0f0f0;
+}
+
+
+
+/* Edit Profile Form */
+/* Add space between profile and edit form */
+#editProfileForm {
+  margin-top: 20px; /* Creates separation from the profile section */
+  padding: 15px; /* Adds inner spacing */
+  border: 1px solid #ddd; /* Optional: Adds a subtle border */
+  border-radius: 8px; /* Smooth rounded corners */
+  background: #f9f9f9; /* Light background for contrast */
+  text-align: center;
+}
+
+/* Form inputs styling */
+#editProfileForm input,
+#editProfileForm textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 10px; /* Adds spacing between inputs */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Save Changes button styling */
+#editProfileForm button {
+  background-color: black;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+#editProfileForm button:hover {
+  background-color: #333;
+}
+
+

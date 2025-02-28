@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT);
 
-    // Check if username or email already exists
+    // check if username or email already exists
     $checkSql = "SELECT id FROM users WHERE username = ? OR email = ?";
     $checkStmt = $conn->prepare($checkSql);
     $checkStmt->bind_param("ss", $username, $email);
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $checkStmt->close();
 
-    // Insert new user
+    // insert new user
     $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sss", $username, $email, $password);

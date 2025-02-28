@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'config.php';
 
-// Fetch posts
+// fetch posts
 $sql = "SELECT posts.*, users.username FROM posts 
         JOIN users ON posts.user_id = users.id 
         ORDER BY posts.created_at DESC";

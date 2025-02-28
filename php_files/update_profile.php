@@ -8,47 +8,74 @@ if (!isset($_SESSION['user_id'])) {
 include 'config.php';
 
 $user_id = $_SESSION['user_id'];
+$current_username = $_SESSION['username'];
 
-// Get updated username and bio from POST data
+// get updated username and bio from POST data
 $username = trim($_POST['username']);
 $bio = trim($_POST['bio']);
 
-// Update profile picture if a file was uploaded
+// only check for username uniqueness if the username is actually changing
+if ($username !== $current_username) {
+    // check if the new username already exists for another user
+    $checkStmt = $conn->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
+    $checkStmt->bind_param("si", $username, $user_id);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        // username already exists
+        $checkStmt->close();
+        $_SESSION['update_error'] = "Username already taken. Please choose a different one.";
+        header("Location: dashboard.php#profile");
+        exit();
+    }
+    $checkStmt->close();
+}
+
+// opdate profile picture if a file was uploaded
 if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
     $targetDir = "../assets/";
     $fileName = basename($_FILES["profile_pic"]["name"]);
     $targetFilePath = $targetDir . $fileName;
     $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
     
-    // Allowed file types
+    //file types
     $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
     if (in_array($fileType, $allowedTypes)) {
+        // add a unique identifier to prevent overwriting files with the same name
+        $uniqueFileName = time() . '_' . $fileName;
+        $targetFilePath = $targetDir . $uniqueFileName;
+        
         if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $targetFilePath)) {
-            // Update profile_pic field
+            // update profile_pic field
             $stmtPic = $conn->prepare("UPDATE users SET profile_pic = ? WHERE id = ?");
-            $stmtPic->bind_param("si", $fileName, $user_id);
+            $stmtPic->bind_param("si", $uniqueFileName, $user_id);
             $stmtPic->execute();
             $stmtPic->close();
         } else {
-            // Handle error in file upload if necessary
-            echo "Error uploading profile picture.";
+            // handle error in file upload
+            $_SESSION['update_error'] = "Error uploading profile picture.";
+            header("Location: dashboard.php#profile");
             exit();
         }
     } else {
-        echo "Invalid file type. Allowed: jpg, jpeg, png, gif.";
+        $_SESSION['update_error'] = "Invalid file type. Allowed: jpg, jpeg, png, gif.";
+        header("Location: dashboard.php#profile");
         exit();
     }
 }
 
-// Update username and bio
+// update username and bio
 $stmt = $conn->prepare("UPDATE users SET username = ?, bio = ? WHERE id = ?");
 $stmt->bind_param("ssi", $username, $bio, $user_id);
 if ($stmt->execute()) {
-    // Update session username if needed
+    //update session username
     $_SESSION['username'] = $username;
-    header("Location: dashboard.php"); // Redirect back to the dashboard
+    $_SESSION['update_success'] = "Profile updated successfully!";
+    header("Location: dashboard.php"); // redirect back to the dashboard
 } else {
-    echo "Error updating profile: " . $conn->error;
+    $_SESSION['update_error'] = "Error updating profile: " . $conn->error;
+    header("Location: dashboard.php#profile");
 }
 $stmt->close();
 $conn->close();

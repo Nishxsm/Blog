@@ -52,10 +52,11 @@ if ($firstRow === null) {
 $stmt->close();
 
 // Fetch all posts for Explore section
-$explore_stmt = $conn->prepare("SELECT posts.id AS post_id, posts.title, posts.content, posts.created_at, users.username, users.profile_pic 
+$explore_stmt = $conn->prepare("SELECT posts.id AS post_id, posts.title, posts.content, posts.created_at, posts.user_id, users.username, users.profile_pic 
                                 FROM posts 
                                 JOIN users ON posts.user_id = users.id 
                                 ORDER BY posts.created_at DESC");
+
 $explore_stmt->execute();
 $explore_posts = $explore_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $explore_stmt->close();
@@ -94,28 +95,38 @@ $conn->close();
             </section>
             
             <section id="explore" style="display:none;">
-                <h2>Explore Section</h2>
-                <div id="explore-posts">
-                    <?php if (!empty($explore_posts)): ?>
-                        <?php foreach ($explore_posts as $post): ?>
-                            <div class="post">
-                                <div class="post-header">
-                                    <img src="<?php echo !empty($post['profile_pic']) ? '../assets/' . htmlspecialchars($post['profile_pic']) : '../assets/default-pfp.jpg'; ?>" alt="Profile Picture" class="profile-pic">
-                                    <span class="post-username"> <?php echo htmlspecialchars($post['username']); ?> </span>
-                                </div>
-                                <h4><?php echo htmlspecialchars($post['title']); ?></h4>
-                                <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
-                                <small>Created on <?php echo date("F j, Y, g:i a", strtotime($post['created_at'])); ?></small>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No posts available yet.</p>
-                    <?php endif; ?>
+    <h2>Explore Section</h2>
+    <input type="text" id="searchUser" placeholder="Search users..." onkeyup="searchUsers()">
+    
+    <div id="searchResultsContainer">
+        <div id="searchResults"></div>
+    </div>
+
+    <div id="explore-posts">
+        <?php if (!empty($explore_posts)): ?>
+            <?php foreach ($explore_posts as $post): ?>
+                <div class="post">
+                    <div class="post-header">
+                        <img src="<?php echo !empty($post['profile_pic']) ? '../assets/' . htmlspecialchars($post['profile_pic']) : '../assets/default-pfp.jpg'; ?>" alt="Profile Picture" class="profile-pic">
+                        <a href="user_profile.php?id=<?php echo urlencode($post['user_id']); ?>">
+    <?php echo htmlspecialchars($post['username']); ?>
+</a>
+
+
+                    </div>
+                    <h4><?php echo htmlspecialchars($post['title']); ?></h4>
+                    <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
+                    <small>Created on <?php echo date("F j, Y, g:i a", strtotime($post['created_at'])); ?></small>
                 </div>
-            </section>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No posts available yet.</p>
+        <?php endif; ?>
+    </div>
+</section>
+
             
-            <section id="profile" style="display:none;">
-                
+    <section id="profile" style="display:none;">            
     <div class="profile-header">
         <img src="<?php echo !empty($userDetails['profile_pic']) ? '../assets/' . htmlspecialchars($userDetails['profile_pic']) : '../assets/default-pfp.jpg'; ?>" alt="Profile Picture" class="profile-pic">
         <div class="profile-details">
@@ -128,21 +139,19 @@ $conn->close();
     
     <!-- Hidden Edit Profile Form -->
     <form id="editProfileForm" action="update_profile.php" method="POST" enctype="multipart/form-data" style="display:none;">
+        <h3 class="posts-title">Edit Profile</h3>
         <label for="newUsername">Username:</label>
         <input type="text" id="newUsername" name="username" value="<?php echo htmlspecialchars($userDetails['username']); ?>" required>
-        
         <label for="newBio">Bio:</label>
         <textarea id="newBio" name="bio" placeholder="Enter your bio..."><?php echo htmlspecialchars($userDetails['bio']); ?></textarea>
-        
         <label for="newProfilePic">Profile Picture:</label>
         <input type="file" id="newProfilePic" name="profile_pic" accept="image/*">
-        
         <button type="submit">Save Changes</button>
     </form>
     
-    <h3 class="posts-title">Posts</h3>
+
     <div id="posts-container">
-        <!-- Your posts loop remains here -->
+    <h3 class="posts-title">Posts</h3>
         <?php if (!empty($posts)): ?>
             <?php foreach ($posts as $post): ?>
                 <div class="post">
@@ -158,9 +167,7 @@ $conn->close();
     </div>
 </section>
 
-            <button class="create-post" onclick="openPostModal()">+</button>
-
-
+    <button class="create-post" onclick="openPostModal()">+</button>
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closePostModal()">&times;</span>
